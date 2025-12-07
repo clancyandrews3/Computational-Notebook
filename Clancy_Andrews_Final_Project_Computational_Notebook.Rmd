@@ -80,7 +80,29 @@ The Forward Euler method is defined as follows
 
 $$y_{n+1} = y_n + \Delta tf(t_n, y_n)$$
 
-where $f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$. We can observe that the method is explicit, and once derived with the Taylor Expansion, has local error of $O(\Delta t^2)$ and a global error of $O(\Delta t)$.
+where $f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$. We can observe that the method is explicit, and once derived with the Taylor Expansion, has local error of $O(\Delta t^2)$ and a global error of $O(\Delta t)$. In terms of stability, let 
+$$\frac{dy}{dt} = \lambda y$$
+with $y(0) = y_0$. If we replace $f(t_n, y_n)$ with $\lambda y_n$, we get
+$$
+\begin{aligned}
+y_{n+1} &= y_n + \Delta t \lambda y_n \\
+&= y_n(1 + \Delta t \lambda).
+\end{aligned}
+$$
+As we iterate from $1$ to $n$, we then get
+$$
+\begin{aligned}
+y_1 = y_0(1 &+ \Delta t \lambda) \\
+y_2 = y_0(1 &+ \Delta t \lambda)^2 \\
+&\vdots \\
+y_n = y_0(1 &+ \Delta t \lambda)^n .
+\end{aligned}
+$$
+Given a small error $\epsilon$, we then get 
+$$y_n = y_0(1 + \Delta t \lambda)^n + \epsilon(1 + \Delta t \lambda)^n.$$
+While $\epsilon$ may be small, the error term may blow up over many iterations. Let
+$$r_{FE} = 1 + \Delta t \lambda.$$
+For $\lambda > 0$, $|r_{FE}|$ will always be greater that $1$, resulting in the Forward Euler method being unconditionally unstable. For $\lambda < 0$, $|r_{FE}|<1$, when $\Delta t < \frac{2}{\lambda}$, the Forward Euler method is stable. Otherwise, when $\Delta t > \frac{2}{\lambda}$, the method is unstable. As a result, our method has limited stability.
 
 \bigbreak
 \center
@@ -92,7 +114,18 @@ The Backwards Euler method is defined as follows
 
 $$y_{n} = y_{n+1} - \Delta tf(t_{n+1}, y_{n+1})$$
 
-where $f(t_{n+1}, y_{n+1}) = \frac{dy_{n+1}(t)}{dt_{n+1}}$. We can observe that this method has the same local and global error as the Forward Euler method. Since the Backward Euler method is implicit, the initial $y_{n+1}$ terms can be determined using an different explicit method, i.e., Forward Euler.
+where $f(t_{n+1}, y_{n+1}) = \frac{dy_{n+1}(t)}{dt_{n+1}}$. We can observe that this method has the same local and global error as the Forward Euler method. Since the Backward Euler method is implicit, the initial $y_{n+1}$ terms can be determined using an different explicit method, i.e., Forward Euler. For the stability of this method, we can again let 
+$$\frac{dy}{dt} = \lambda y$$
+where we then get
+$$
+\begin{aligned}
+y_n &= y_{n+1} - \Delta t \lambda y_{n+1} \\
+&= y_{n+1}(1-\Delta t \lambda).
+\end{aligned}
+$$
+With further rearrangements, we have
+$$y_{n+1} = y_n(1-\Delta t \lambda)^{-1}.$$
+
 
 \bigbreak
 \center
