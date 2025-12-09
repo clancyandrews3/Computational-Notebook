@@ -54,9 +54,11 @@ py_require("imageio")
 
 |     There are various sources of information on the topic of scientific computing. Textbooks on the topic, including but not limited to those done by Heath (2018) and Kincaid & Cheney (2009), give a deep understanding to mathematical computing topics, with introductory material, to numerical methods for solving differential equations. 
 
-|     While scientific computing has just started taking off with the introduction of the computer, problems and methods for solving complex equations have been identified and approached centuries before. Gustafsson (2018) addressed these topics in the textbook Scientific Computing, A Historical Perspective, where the idea of computation was more or less achieved before the invention of computers, and how it evolved after the fact. We can observe a method that was developed and was computationally complex before the utilization of computers, which was the simplex method for linear optimization. Bertsimas and Tsitsiklis (1997) demonstrate the simplex algorithm using a tableau, which can be established and carried out by hand for smaller linear programming problems. The advent of the computer has since allowed this method to be achieved with extreme precision and efficiency for much larger formulations.
+|     While scientific computing has just started taking off with the introduction of the computer, problems and methods for solving complex equations have been identified and approached centuries before. Gustafsson (2018) addressed these topics in the textbook Scientific Computing, A Historical Perspective, where the idea of computation was more, or less, achieved before the invention of computers, and how it evolved after the fact. We can observe a method that was developed and was computationally complex before the utilization of computers, which was the simplex method for linear optimization. Bertsimas and Tsitsiklis (1997) demonstrate the simplex algorithm using a tableau, which can be established and carried out by hand for smaller linear programming problems. The advent of the computer has since allowed this method to be achieved with extreme precision and efficiency for much larger formulations.
 
 |     Work in the field has not slowed down, with more complex problems being addressed and solved today. The paper "Parallel matching-based AMG preconditioners for elliptic equations discretized by IgA", written by D'Ambra, Durastante, and Filippone (2025), is one example of improvements and capabilities made possible by high-performance computing, and efficient methods for solving problems in the field. In their work, D'Ambra, Durastante, and Filippone (2025) implement Krylov subspace methods, with parallel-computing frameworks, to efficiently solve discretized elliptic boundary value problems. Another example can be found by the work of Li, Di, and Jiang (2025), for which they use a Two-Step Generalized RBF Finite Difference method to solve partial differential equations on manifolds. With both of these examples, it is quite evident that the field of scientific computing has developed substantially following major improvements in methodological refinement and technological advancement. 
+
+|     As we begin to progress through the methods, keep in mind the order of error, the type of method, and any nuance details that set each method apart from the rest. Each method has its own benefits and drawbacks, depending on the use and problem formulation.
 
 \break
 \center
@@ -76,9 +78,11 @@ py_require("imageio")
 \raggedright
 \bigbreak
 
-The Forward Euler method is defined as follows
+|     The Forward Euler method is defined as follows
 
-$$y_{n+1} = y_n + \Delta tf(t_n, y_n)$$
+\begin{align}
+y_{n+1} = y_n + \Delta tf(t_n, y_n)
+\end{align}
 
 where $f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$. We can observe that the method is explicit, and once derived with the Taylor Expansion, has local error of $O(\Delta t^2)$ and a global error of $O(\Delta t)$. In terms of stability, let 
 $$\frac{dy}{dt} = \lambda y$$
@@ -110,11 +114,15 @@ For $\lambda > 0$, $|r_{FE}|$ will always be greater that $1$, resulting in the 
 \raggedright
 \bigbreak
 
-The Backwards Euler method is defined as follows
+|     The Backwards Euler method is defined as follows
 
-$$y_{n} = y_{n+1} - \Delta tf(t_{n+1}, y_{n+1})$$
 
-where $f(t_{n+1}, y_{n+1}) = \frac{dy_{n+1}(t)}{dt_{n+1}}$. We can observe that this method has the same local and global error as the Forward Euler method. Since the Backward Euler method is implicit, the initial $y_{n+1}$ terms can be determined using an different explicit method, i.e., Forward Euler. For the stability of this method, we can again let 
+\begin{align}
+y_{n} = y_{n+1} - \Delta tf(t_{n+1}, y_{n+1})
+\end{align}
+
+
+where $f(t_{n+1}, y_{n+1}) = \frac{dy_{n+1}(t)}{dt_{n+1}}$. We can observe that this method has the same local and global error as the Forward Euler method. Since the Backward Euler method is implicit, the initial $y_{n+1}$ term can be determined using an different explicit method, i.e., Forward Euler. For the stability of this method, we can again let 
 $$\frac{dy}{dt} = \lambda y$$
 where we then get
 $$
@@ -123,42 +131,42 @@ y_n &= y_{n+1} - \Delta t \lambda y_{n+1} \\
 &= y_{n+1}(1-\Delta t \lambda).
 \end{aligned}
 $$
-With further rearrangements, we have
+With further rearrangements, we arrive at
 $$y_{n+1} = y_n(1-\Delta t \lambda)^{-1}.$$
+Letting $r_{BE} = (1+\Delta t \lambda)^{-1}$, we get unconditional stability for $\lambda < 0$ and $r_{BE} < 1$. The Backward Euler method is also stable when $\Delta t > \frac{2}{|\lambda|}$ for $\lambda > 0$ and $|r_{BE}| > 1$. However, the method is unstable when $\Delta t < \frac{2}{|\lambda|}$ for $\lambda > 0$ and $|r_{BE}| > 1$. Compared to the Forward Euler method, the Backward Euler method has a larger range of stability.
 
 
-\bigbreak
+\break
 \center
 ### Heun (Average)
 \raggedright
 \bigbreak
 
-The Heun method is defined as follows
+|     The Heun method is defined as follows
 
-$$y_{n+1} = y_{n} + \frac{\Delta t}{2}\big[f(t_{n}, y_{n})+f(t_{n+1}, y_{n+1})\big]$$
-where $f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$. 
+\begin{align}
+y_{n+1} = y_{n} + \frac{\Delta t}{2}\big[f(t_{n}, y_{n})+f(t_{n+1}, y_{n+1})\big]
+\end{align}
 
-\bigbreak
-\center
-### Runge-Kutta 2 (Midpoint)
-\raggedright
-\bigbreak
-
-The Runge-Kutta 2 method is defined as follows
-
-$$y_{n+1} = y_{n} + \Delta t\bigg(f\bigg[t_{n} + \frac{\Delta t}{2}, y\bigg(t_n + \frac{\Delta t}{2}\bigg)\bigg]\bigg)$$
-
-where $f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$.
+where $f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$ and $f(t_{n+1}, y_{n+1}) = \frac{dy_{n+1}(t)}{dt_{n+1}}$. One major difference between the Heun method and the two previous methods mentioned is the global and local error of this method. The Heun method has $O(\Delta t^3)$ and $O(\Delta t^2)$ local and global error, respectively. This results in a higher accuracy when making approximations, especially after many iterations.
 
 \bigbreak
 \center
-### Runge-Kutta 4
+### Runge-Kutta 2 (Midpoint) & Runge-Kutta 4
 \raggedright
 \bigbreak
 
-The Runge-Kutta 4 method is defined as follows
+|     The Runge-Kutta 2 method is defined as follows
 
-$$y_{n+1} = y_{n} + \frac{\Delta t}{6}\bigg(F_1 + 2F_2 + 2F_3 + F_4\bigg)$$
+\begin{align}
+y_{n+1} = y_{n} + \Delta t\bigg(f\bigg[t_{n} + \frac{\Delta t}{2}, y\bigg(t_n + \frac{\Delta t}{2}\bigg)\bigg]\bigg)
+\end{align}
+
+where $f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$. The Runge-Kutta 4 method is defined as follows
+
+\begin{align}
+y_{n+1} = y_{n} + \frac{\Delta t}{6}\bigg(F_1 + 2F_2 + 2F_3 + F_4\bigg)
+\end{align}
 
 where 
 
@@ -170,31 +178,29 @@ F_3 &= f\bigg(t_n + \frac{\Delta t}{2}, y_n + \frac{\Delta t}{2}F_2\bigg), \\
 F_4 &= f\bigg(t_n + \Delta t, y_n + \Delta tF_3\bigg). \\
 \end{aligned}
 $$
-Test
+
+Both of the Runge-Kutta methods are derived from the Talyor series, much like Forward Euler was, but in these cases, we did not limit ourselves to the first three terms of the series. We can continue to expand these methods, and gain better accuracy. However, it may not always be feasible to calculate the $n$th derivative, so we much accept trade offs when making approximations.
+
 
 \bigbreak
 \center
-### Adams-Bashforth
+### Adams-Bashforth & Adams-Moulton
 \raggedright
 \bigbreak
 
-The Adams-Bashforth method is defined as follows
+|     As mentioned at the beginning of this section, the Adams-Bashforth and Adams-Moulton methods are multi-step methods, with the Adams-Bashforth method being explicit and the Adams-Moulton method being implicit. The Adams-Bashforth method is defined as follows
 
-$$y_{n+1} = y_{n} + \frac{\Delta t}{2}\bigg(3f_n - f_{n-1}\bigg)$$
+\begin{align}
+y_{n+1} = y_{n} + \frac{\Delta t}{2}\bigg(3f_n - f_{n-1}\bigg)
+\end{align}
 
-where $f_n = f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$.
+where $f_n = f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$ and $f_{n-1} = f(t_{n-1}, y_{n-1}) = \frac{dy_{n-1}(t)}{dt_{n-1}}$. The Adams-Moulton method is defined as follows
 
-\bigbreak
-\center
-### Adams-Moulton
-\raggedright
-\bigbreak
+\begin{align}
+y_{n+1} = y_{n} + \frac{\Delta t}{2}\bigg(f_{n+1} - f_{n}\bigg)
+\end{align}
 
-The Adams-Moulton method is defined as follows
-
-$$y_{n+1} = y_{n} + \frac{\Delta t}{2}\bigg(f_{n+1} - f_{n}\bigg)$$
-
-where $f_n = f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$.
+where $f_n = f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$ and $f_{n+1} = \frac{dy_{n+1}(t)}{dt_{n+1}}$. The combination of these methods are what we refer to as predictor-corrector methods. The idea behind predictor-corrector methods is to use a fast and simple predictor (explicit) method to approximate the next solution point, then utilized that approximation in the corrector (implicit) method. This allows us to efficiently converge to a solution while maintaining stability. As it relates to the "Adams' family" methods, the Adams-Bashforth method (6) is our predictor, and the Adams-Moulton method (7) is our corrector.
 
 
 \bigbreak
@@ -205,32 +211,218 @@ where $f_n = f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$.
 $$\alpha_1f'(t_0) + \beta_1f(t_0) = \gamma_1$$
 and
 $$\alpha_2f'(t_n) + \beta_2f(t_n) = \gamma_2.$$
+With these notions of boundary conditions set, we can proceed into the methods that can be employed to solve boundary valued problems.
 
 \bigbreak
 \center
-### Finite Difference
+### Shooting Method
 \raggedright
 \bigbreak
 
-Text for finite difference using central, forward, backward difference
+|     The Shooting method is a method that can be used to solve boundary value problems, especially problems where it may be difficult to get boundary conditions. It transforms the boundary value problem into an initial value problem, and then "shoots" toward a solution, with the goal of getting closer to the target with every consecutive shot. To achieve this, the method starts with taking an initial condition and solving the problem to see where the solution "lands" relative to the target, which in this case is our boundary condition. Once we determine the distance the "shot" was from the target, we adjust the initial guess using a root-finding method, like bisection or Newton-Raphson. The Newton-Raphson method is defined as
+
+\begin{align}
+x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}. 
+\end{align}
+
+In order to achieve success with this method, by the intermediate value theorem, the continuous function $f$ must have at least one root on the interval $(a,b)$ where $f(a)f(b) < 0$. That is, $f(a)$ must have a different sign then $f(b)$.
+
+\bigbreak
+\center
+### Direct Method for Linear Boundary Value Problems
+\raggedright
+\bigbreak
+
+|     The goal for the direct method is to transform the linear boundary value problem into a system of linear equations, which can be solve via $A\vec x = \vec b$. Suppose we are trying to solve the linear boundary value problem
+$$
+y'' = p(t)y' + q(t)y + r(t).
+$$
+We can populate our $A$ matrix by using the central difference method to approximate rows $2, \ldots, n-1$, and using forward and backward difference for rows $1$ and $n$, respectively. Central difference for the first derivative is defined as 
+
+\begin{align}
+y'(t) = \frac{y(t + \Delta t) - y(t-\Delta t)}{2\Delta t}
+\end{align}
+
+where the second derivative is defined as
+
+\begin{align}
+y''(t) = \frac{y(t + \Delta t) - 2y(t) + y(t-\Delta t)}{\Delta t^2}.
+\end{align}
+
+For Forward Difference, we have 
+
+\begin{align}
+y'(t) = \frac{-3y(t) + 4y(t + \Delta t) - y(t + 2\Delta t)}{2\Delta t}
+\end{align}
+
+and for Backward Difference, we have
+
+\begin{align}
+y'(t) = \frac{3y(t) - 4y(t-\Delta t) + y(t-2\Delta t)}{2\Delta t}.
+\end{align}
+
+Once those methods are used to populate $A$, we get 
+
+$$
+A = 
+\begin{bmatrix}
+1 & 0 & 0 & 0 &\cdots & 0 \\
+a_1 & b_1 & c_1  & 0 & \cdots & 0 \\
+0 & a_2 & b_2 & c_2 & \cdots & 0 \\
+0 & 0 & a_3 & b_3 & \cdots & 0 \\
+\vdots & \vdots & \vdots & \vdots & \ddots & \vdots\\
+0 & 0 & 0 & 0 & \cdots & 1 \\
+\end{bmatrix}
+$$
+where
+
+$$
+\begin{aligned}
+a_i &= 1 + \frac12p(t_i)\Delta t, \\
+b_i &= -2 - q(t_i)\Delta t^2, \\
+c_i &= 1 - \frac12p(t_i)\Delta t \\
+\end{aligned}
+$$
+for $i = 1,\ldots, n$. Our $\vec b$ will be the boundary values with $\vec b_0 = \alpha$ and $\vec b_{n} = \beta$. All other values will be $\vec b_i = r(t_i)\Delta t$ for $i = 1, \ldots, n-1$. It is important to note that as our problem gets bigger, so does $A$ and $\vec b$, making the solution more costly for the computer. The next section will discuss methods for solving systems of equations, with methods that account for computational complexity.
+
+\bigbreak
+## Methods for Systems of Equations
+
+|     While we might know some methods for solving systems of equations, i.e., Gaussian Elimination, we will also address some other methods that perform with better efficiency for problems with higher computational complexity. 
+
+\break
+\center
+### Gaussian Elimination
+\raggedright
+\bigbreak
+
+|     Gaussian Elimination is an algorithm that performs elementary row operations on an augmented matrix $[A|b]$, resulting in a simplified form that can then be solved (or determine solvability). The following example will walk us through the steps taken for Gaussian Elimination. We first need to perform diagonalization on $[A|b]$, putting the augmented matrix into row echelon form. Suppose we have 
+
+$$
+[A|b] = 
+\begin{bmatrix}
+1 & 1 & 1 & 1 \\
+1 & 2 & 4 & -1 \\
+1 & 3 & 9 & 1 
+\end{bmatrix}.
+$$
+We can reduce the matrix by starting with adding $R_2$ by $-R_1$ and $R_3$ by $-R_1$. We get 
+
+$$
+[A|b] = 
+\begin{bmatrix}
+1 & 1 & 1 & 1 \\
+0 & 1 & 3 & -2 \\
+0 & 2 & 8 & 0 
+\end{bmatrix}.
+$$
+We can reduce the matrix again by adding $R_3$ with $-2R_2$. We then get
+
+$$
+[A|b] = 
+\begin{bmatrix}
+1 & 1 & 1 & 1 \\
+0 & 1 & 3 & -2 \\
+0 & 0 & 2 & 4 
+\end{bmatrix}.
+$$
+Now that our augmented matrix is in row echelon form, we can perform backward substitution on the matrix. We have the following equations:
+$$
+\begin{aligned}
+2x_3 = 4 &\Rightarrow x_3 = 2 \\
+x_2 + 3x_3 = -2 &\Rightarrow x_2 + 3(2) = -2 \\
+&\Rightarrow x_2 = -8 \\
+x_1 + x_2 + x_3 = 1 &\Rightarrow x_1 + (-8) + (2) = 1 \\
+&\Rightarrow x_1 = 7.
+\end{aligned}
+$$
+The resulting solution is $\vec x^T = [7,-8,2]$. 
+
+|     While this method works great on paper and is easy to program, as our problems get larger, computational run time takes a hit. For our diagonalization step, it takes $n$ pivots, for $n$ rows, for $n$ columns. This results in $O(n^3)$ computational time complexity. Our backward substitution step only takes $O(n^2)$, which results in a total worst case computational time complexity of $O(n^3) + O(n^2) = O(n^3)$. While this does not look great for trying to efficiently solve systems of equations, there are other methods that provide better time complexity.
 
 
-#### Central Difference
 
-|     Text for central difference
 
-#### Forward Difference
+\break
+\center
+### LU Decomposition
+\raggedright
+\bigbreak
 
-|     Text for forward difference
+|     Another method for solving systems of equations, by which the matrix $A$ is decomposed into the product of two triangular matrices, is known as LU Decomposition. As stated, the goal is to break $A$ into two triangular matrices $L$ and $U$, such that $A = LU$. In this case, $L$ is our lower triangular matrix, which we define as 
 
-#### Backward Difference
+$$
+L =
+\begin{bmatrix}
+1 & 0 & 0 & \cdots & 0 \\
+c_{21} & 1 & 0 & \cdots & 0 \\
+c_{31} & c_{32} & 1  & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+c_{n1} & c_{n2} & c_{n3} & \cdots & 1
+\end{bmatrix}
+$$
+where $c_{ij}$ is our scaling factor that we would perform during Gaussian Elimination at row $i$ and column $j$ in our matrix. We define $U$ as 
+$$
+U =
+\begin{bmatrix}
+x_{11} & x_{12} & x_{13}& \cdots & x_{1n}\\
+0 & x_{22} & x_{23} & \cdots & x_{2n}\\
+0 & 0 & x_{33} &\cdots & x_{2n}\\
+\vdots & \vdots & \vdots & \ddots & \vdots\\
+0 & 0 & 0 & \cdots & x_{nn}
+\end{bmatrix}
+$$
+where $x_{ij}$ is the $i$th row and $j$th column element of $A$. We can then let $U\vec x = \vec y$, and solving $A\vec x = \vec b$, we have
 
-|     Text for backward difference
+$$
+L\vec y = LU\vec x = A\vec x = \vec b.
+$$
 
-### Spectral
+The worst case computational time complexity is now down to $O(n^2)$ from the $O(n^3)$ of the Gaussian Elimination. It is worthwhile to mention a similar method to LU Decomposition, which is Cholesky's factorization. While similar to LU, Cholesky's makes use of the $L$ and $U$ matrices when $U = L^T$. By one theorem on the factorization method, if $A$ is a real, symmetric, and positive definite matrix, then it has a unique factorization, $A = LL^T$, in which $L$ is lower triangular with a positive diagonal. When all of the conditions are met for Cholesky factorization, the method will only take half as many steps as LU Decomposition.
 
-|     Text FFT info
+\break
+\center
+### Jacobi & Gauss-Seidel
+\raggedright
+\bigbreak
 
+|     Unlike the previous methods we explored to solve systems of equations, which were direct methods, we will now explore two indirect methods. Indirect methods produce a sequence of vectors that converge toward a solution. We will begin by defining the Jacobi method as follows
+
+$$
+\begin{aligned}
+x_1^{k+1} = (-a_{12}x_2^k - a_{13}x_3^k  - &\ldots - a_{1n}x_n^k + b_1)/a_{11} \\
+x_2^{k+1} = (-a_{22}x_2^k - a_{23}x_3^k  - &\ldots - a_{2n}x_n^k + b_2)/a_{22} \\
+&\vdots \\
+x_n^{k+1} = (-a_{n2}x_2^k - a_{n3}x_3^k  - &\ldots - a_{nn-1}x_{n-1}^k + b_n)/a_{nn} \\
+\end{aligned}
+$$
+Given an initial value $\vec x^0$, the Jacobi method is convergent if and only if $A$ is strictly diagonal dominant. That is, if the diagonal element is strictly larger than the sum of all other element in that row, then it is convergent. If we let $A = D + R$ where $D$ is the diagonal of $A$ and $R$ is all other elements of $A$, then we get
+$$A\vec x = (D + R)\vec x = \vec b$$
+Once we have our $D$, $R$, and $\vec b$, we can solve for $\vec x^{k+1}$ as follows:
+$$
+\vec x^{k+1} = D^{-1}(-R\vec x^k + \vec b).
+$$
+An alternative to this is to let $A = L + U^s$ where $L$ is the lower triangular matrix, including the diagonal, and $U^s$ is the strict upper triangular matrix. We then get
+$$
+\vec x^{k+1} = L^{-1}(-U^s\vec x^k + \vec b).
+$$
+While $A = L + U^s$ is generally faster sequentially than letting $A = D + R$, the latter formulation allows for parallel execution of the method, resulting in a greater speedup.
+
+|     The Gauss-Seidel method is quite similar to the Jacobi method, with one slight change. Once we calculate $x^{k+1}_1$, we can plug the estimation into for formula for $x^{k+1}_2$, and continue this process until we reach $x^{k+1}_n$. The formulation is as follows
+$$
+\begin{aligned}
+x_1^{k+1} = (-a_{12}x_2^{k} - a_{13}x_3^k  - &\ldots - a_{1n}x_n^k + b_1)/a_{11} \\
+x_2^{k+1} = (-a_{11}x_1^{k+1} - a_{23}x_3^k  - &\ldots - a_{2n}x_n^k + b_2)/a_{22} \\
+x_2^{k+1} = (-a_{31}x_1^{k+1} - a_{32}x_2^{k+1}  - &\ldots - a_{3n}x_n^k + b_3)/a_{33} \\
+&\vdots \\
+x_n^{k+1} = (-a_{n1}x_1^{k+1} - a_{n2}x_2^{k+1}  - &\ldots - a_{nn-1}x_{n-1}^{k+1} + b_n)/a_{nn} \\
+\end{aligned}
+$$
+The altered method will allow for a faster convergence of the solution than what is achieved by the Jacobi method.
+
+
+
+\bigbreak
 ## Methods of Lines
 
 |     Methods of lines like leap frog and cd
@@ -260,13 +452,13 @@ Text for finite difference using central, forward, backward difference
 |     Text 
 
 \bigbreak
-## Methods for Systems of Equations
+## Spectral Methods
 
-|     While we might know some methods for solving systems of equations, i.e., Gaussian Elimination, we will also address some other methods that perform with better efficiency for problems with higher computational complexity. 
+|     Methods of lines like leap frog and cd
 
 \bigbreak
 \center
-### Gaussian Elimination
+### Fast Fourier Transform
 \raggedright
 \bigbreak
 
@@ -274,35 +466,12 @@ Text for finite difference using central, forward, backward difference
 
 \bigbreak
 \center
-### Backward Substitution
+### Chebyshev Polynomials
 \raggedright
 \bigbreak
 
 |     Text
 
-\bigbreak
-\center
-### LU Decomposition
-\raggedright
-\bigbreak
-
-|     Text
-
-\bigbreak
-\center
-### Jacobi
-\raggedright
-\bigbreak
-
-|     Text
-
-\bigbreak
-\center
-### Gauss-Seidel
-\raggedright
-\bigbreak
-
-|     Text
 
 \break
 \center
@@ -707,7 +876,7 @@ It is important to note that we can increase $m$ to be how ever many spirals we 
 
 Bertsimas, D. & Tsitsiklis, J.N. (1997). *Introduction to Linear Optimization (6th Edition).* Athena Scientific.
 
-D'Ambra, P. & Durastante, F. & Filippone, S. (2025). *Parallel mathcing-based AMG preconditioners for elliptic equations discretized by IgA [Preprint].* arXiv. https://arxiv.org/pdf/2511.21268
+D'Ambra, P. & Durastante, F. & Filippone, S. (2025). *Parallel matching-based AMG preconditioners for elliptic equations discretized by IgA [Preprint].* arXiv. https://arxiv.org/pdf/2511.21268
 
 Gustafsson, B. (2018). *Scientific Computing: A Historical Perspective.* Springer. https://doi.org/10.1007/978-3-319-69847-2.
 
