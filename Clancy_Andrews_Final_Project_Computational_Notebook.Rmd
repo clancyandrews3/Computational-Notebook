@@ -66,11 +66,11 @@ py_require("imageio")
 \raggedright
 
 
-|     There are various methods we can employ to solve problems. The following sections will be a brief overview of methods for solving initial and boundary value problems, with attention to their properties and stability.
+|     There are various methods we can employ to solve problems. The following sections will be a brief overview of methods for solving initial value problems, boundary value problems, and partial differential equations, with attention to their properties and stability.
 
 ## Methods for Inital Value Problems
 
-|     Initial value problems arise when differential equation is paired with an initial state at a specific starting time. The methods that we will address will work utilize the initial value of the equation at the starting time $t_0$, which will need to be derived or assumed. There are two main types of methods in this section. Those are single-step and multi-step methods. The idea of single-step methods is to use an adjacent point in time to calculate the next step in the series. Multi-step methods are not restricted to just the immediate, adjacent point in time. They will often use points two or more steps away. The Adams-Bashforth and Adams-Moulton methods are the only two multi-step methods that we will go over, the rest with be single-step.
+|     Initial value problems arise when a differential equation is paired with an initial state at a specific starting time. The methods that we will address will work utilize the initial value of the equation at the starting time $t_0$, which will need to be derived or assumed. There are two main types of methods in this section. Those are single-step and multi-step methods. The idea of single-step methods is to use an adjacent point in time to calculate the next step in the series. Multi-step methods are not restricted to just the immediate, adjacent point in time. They will often use points two or more steps away. The Adams-Bashforth and Adams-Moulton methods are the only two multi-step methods that we will go over, the rest with be single-step.
 
 \bigbreak
 \center
@@ -102,7 +102,7 @@ y_2 = y_0(1 &+ \Delta t \lambda)^2 \\
 y_n = y_0(1 &+ \Delta t \lambda)^n .
 \end{aligned}
 $$
-Given a small error $\epsilon$, we then get 
+Given a small error $\epsilon$, we have
 $$y_n = y_0(1 + \Delta t \lambda)^n + \epsilon(1 + \Delta t \lambda)^n.$$
 While $\epsilon$ may be small, the error term may blow up over many iterations. Let
 $$r_{FE} = 1 + \Delta t \lambda.$$
@@ -124,7 +124,7 @@ y_{n} = y_{n+1} - \Delta tf(t_{n+1}, y_{n+1})
 
 where $f(t_{n+1}, y_{n+1}) = \frac{dy_{n+1}(t)}{dt_{n+1}}$. We can observe that this method has the same local and global error as the Forward Euler method. Since the Backward Euler method is implicit, the initial $y_{n+1}$ term can be determined using an different explicit method, i.e., Forward Euler. For the stability of this method, we can again let 
 $$\frac{dy}{dt} = \lambda y$$
-where we then get
+where
 $$
 \begin{aligned}
 y_n &= y_{n+1} - \Delta t \lambda y_{n+1} \\
@@ -179,7 +179,7 @@ F_4 &= f\bigg(t_n + \Delta t, y_n + \Delta tF_3\bigg). \\
 \end{aligned}
 $$
 
-Both of the Runge-Kutta methods are derived from the Talyor series, much like Forward Euler was, but in these cases, we did not limit ourselves to the first three terms of the series. We can continue to expand these methods, and gain better accuracy. However, it may not always be feasible to calculate the $n$th derivative, so we much accept trade offs when making approximations.
+Both of the Runge-Kutta methods are derived from the Talyor series, much like Forward Euler was, but in these cases, we did not limit ourselves to the first three terms of the series. We can continue to expand these methods, and gain better accuracy in doing so. However, it may not always be feasible to calculate the $n$th derivative, so we must accept trade offs when making approximations.
 
 
 \bigbreak
@@ -200,7 +200,7 @@ where $f_n = f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$ and $f_{n-1} = f(t_{n-1}, y_{n-
 y_{n+1} = y_{n} + \frac{\Delta t}{2}\bigg(f_{n+1} - f_{n}\bigg)
 \end{align}
 
-where $f_n = f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$ and $f_{n+1} = \frac{dy_{n+1}(t)}{dt_{n+1}}$. The combination of these methods are what we refer to as predictor-corrector methods. The idea behind predictor-corrector methods is to use a fast and simple predictor (explicit) method to approximate the next solution point, then utilized that approximation in the corrector (implicit) method. This allows us to efficiently converge to a solution while maintaining stability. As it relates to the "Adams' family" methods, the Adams-Bashforth method (6) is our predictor, and the Adams-Moulton method (7) is our corrector.
+where $f_n = f(t_n, y_n) = \frac{dy_n(t)}{dt_n}$ and $f_{n+1} = \frac{dy_{n+1}(t)}{dt_{n+1}}$. The combination of these methods are what we refer to as predictor-corrector methods. The idea behind predictor-corrector methods is to use a fast, simple predictor (explicit) method to approximate the next solution point, then utilize that approximation in the corrector (implicit) method. This allows us to efficiently converge to a solution while maintaining stability. As it relates to the "Adams' family" methods, the Adams-Bashforth method (6) is our predictor, and the Adams-Moulton method (7) is our corrector.
 
 
 \bigbreak
@@ -219,7 +219,7 @@ With these notions of boundary conditions set, we can proceed into the methods t
 \raggedright
 \bigbreak
 
-|     The Shooting method is a method that can be used to solve boundary value problems, especially problems where it may be difficult to get boundary conditions. It transforms the boundary value problem into an initial value problem, and then "shoots" toward a solution, with the goal of getting closer to the target with every consecutive shot. To achieve this, the method starts with taking an initial condition and solving the problem to see where the solution "lands" relative to the target, which in this case is our boundary condition. Once we determine the distance the "shot" was from the target, we adjust the initial guess using a root-finding method, like bisection or Newton-Raphson. The Newton-Raphson method is defined as
+|     The Shooting method is a method that can be used to solve boundary value problems, especially problems where it may be difficult to get boundary conditions. It transforms the boundary value problem into an initial value problem, and then "shoots" toward a solution, with the goal of getting closer to the target with every consecutive shot. To achieve this, the method starts with taking an initial condition, and then solving the problem to see where the solution "lands" relative to the target, which in this case is our boundary condition. Once we determine the distance the "shot" was from the target, we adjust the initial guess using a root-finding method, such as the bisection or Newton-Raphson root-finding methods. The Newton-Raphson method is defined as
 
 \begin{align}
 x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}. 
@@ -233,7 +233,7 @@ In order to achieve success with this method, by the intermediate value theorem,
 \raggedright
 \bigbreak
 
-|     The goal for the direct method is to transform the linear boundary value problem into a system of linear equations, which can be solve via $A\vec x = \vec b$. Suppose we are trying to solve the linear boundary value problem
+|     The goal for the direct method is to transform the linear boundary value problem into a system of linear equations, which can be solved via $A\vec x = \vec b$. Suppose we are trying to solve the linear boundary value problem
 $$
 y'' = p(t)y' + q(t)y + r(t).
 $$
@@ -338,7 +338,7 @@ x_1 + x_2 + x_3 = 1 &\Rightarrow x_1 + (-8) + (2) = 1 \\
 $$
 The resulting solution is $\vec x^T = [7,-8,2]$. 
 
-|     While this method works great on paper and is easy to program, as our problems get larger, computational run time takes a hit. For our diagonalization step, it takes $n$ pivots, for $n$ rows, for $n$ columns. This results in $O(n^3)$ computational time complexity. Our backward substitution step only takes $O(n^2)$, which results in a total worst case computational time complexity of $O(n^3) + O(n^2) = O(n^3)$. While this does not look great for trying to efficiently solve systems of equations, there are other methods that provide better time complexity.
+|     While this method works great on paper and is easy to program, as our problems get larger, computational run time takes a hit. For our diagonalization step, it takes $n$ pivots, for $n$ rows, for $n$ columns. This results in $O(n^3)$ computational time complexity. Our backward substitution step only takes $O(n^2)$, which results in a total worst case computational time complexity of $O(n^3) + O(n^2) = O(n^3)$. While this does not look great for trying to efficiently solve systems of equations, there are alternative methods that provide better time complexity.
 
 
 
@@ -361,7 +361,7 @@ c_{31} & c_{32} & 1  & \cdots & 0 \\
 c_{n1} & c_{n2} & c_{n3} & \cdots & 1
 \end{bmatrix}
 $$
-where $c_{ij}$ is our scaling factor that we would perform during Gaussian Elimination at row $i$ and column $j$ in our matrix. We define $U$ as 
+where $c_{ij}$ is our scaling factor that we would perform during Gaussian Elimination at row $i$ and column $j$ in our matrix. We define our upper triangular matrix $U$ as 
 $$
 U =
 \begin{bmatrix}
@@ -372,13 +372,13 @@ x_{11} & x_{12} & x_{13}& \cdots & x_{1n}\\
 0 & 0 & 0 & \cdots & x_{nn}
 \end{bmatrix}
 $$
-where $x_{ij}$ is the $i$th row and $j$th column element of $A$. We can then let $U\vec x = \vec y$, and solving $A\vec x = \vec b$, we have
+where $x_{ij}$ is the $i$th row and $j$th column element of $A$. We can then let $U\vec x = \vec y$, and solving $A\vec x = \vec b$, we get
 
 $$
 L\vec y = LU\vec x = A\vec x = \vec b.
 $$
 
-The worst case computational time complexity is now down to $O(n^2)$ from the $O(n^3)$ of the Gaussian Elimination. It is worthwhile to mention a similar method to LU Decomposition, which is Cholesky's factorization. While similar to LU, Cholesky's makes use of the $L$ and $U$ matrices when $U = L^T$. By one theorem on the factorization method, if $A$ is a real, symmetric, and positive definite matrix, then it has a unique factorization, $A = LL^T$, in which $L$ is lower triangular with a positive diagonal. When all of the conditions are met for Cholesky factorization, the method will only take half as many steps as LU Decomposition.
+The worst case computational time complexity is now down to $O(n^2)$ from $O(n^3)$ performed by Gaussian Elimination. It is worthwhile to mention a similar method to LU Decomposition, which is Cholesky's factorization. While similar to LU, Cholesky's makes use of the $L$ and $U$ matrices when $U = L^T$. By one theorem on the Cholesky factorization method, if $A$ is a real, symmetric, and positive definite matrix, then it has a unique factorization, $A = LL^T$, in which $L$ is lower triangular with a positive diagonal. When all of the conditions are met for Cholesky factorization, the method will only take half as many steps as LU Decomposition does.
 
 \break
 \center
@@ -391,9 +391,9 @@ The worst case computational time complexity is now down to $O(n^2)$ from the $O
 $$
 \begin{aligned}
 x_1^{k+1} = (-a_{12}x_2^k - a_{13}x_3^k  - &\ldots - a_{1n}x_n^k + b_1)/a_{11} \\
-x_2^{k+1} = (-a_{22}x_2^k - a_{23}x_3^k  - &\ldots - a_{2n}x_n^k + b_2)/a_{22} \\
+x_2^{k+1} = (-a_{21}x_1^k - a_{23}x_3^k  - &\ldots - a_{2n}x_n^k + b_2)/a_{22} \\
 &\vdots \\
-x_n^{k+1} = (-a_{n2}x_2^k - a_{n3}x_3^k  - &\ldots - a_{nn-1}x_{n-1}^k + b_n)/a_{nn} \\
+x_n^{k+1} = (-a_{n1}x_1^k - a_{n2}x_2^k  - &\ldots - a_{nn-1}x_{n-1}^k + b_n)/a_{nn} \\
 \end{aligned}
 $$
 Given an initial value $\vec x^0$, the Jacobi method is convergent if and only if $A$ is strictly diagonal dominant. That is, if the diagonal element is strictly larger than the sum of all other element in that row, then it is convergent. If we let $A = D + R$ where $D$ is the diagonal of $A$ and $R$ is all other elements of $A$, then we get
@@ -412,20 +412,20 @@ While $A = L + U^s$ is generally faster sequentially than letting $A = D + R$, t
 $$
 \begin{aligned}
 x_1^{k+1} = (-a_{12}x_2^{k} - a_{13}x_3^k  - &\ldots - a_{1n}x_n^k + b_1)/a_{11} \\
-x_2^{k+1} = (-a_{11}x_1^{k+1} - a_{23}x_3^k  - &\ldots - a_{2n}x_n^k + b_2)/a_{22} \\
-x_2^{k+1} = (-a_{31}x_1^{k+1} - a_{32}x_2^{k+1}  - &\ldots - a_{3n}x_n^k + b_3)/a_{33} \\
+x_2^{k+1} = (-a_{21}x_1^{k+1} - a_{23}x_3^k  - &\ldots - a_{2n}x_n^k + b_2)/a_{22} \\
+x_3^{k+1} = (-a_{31}x_1^{k+1} - a_{32}x_2^{k+1}  - &\ldots - a_{3n}x_n^k + b_3)/a_{33} \\
 &\vdots \\
 x_n^{k+1} = (-a_{n1}x_1^{k+1} - a_{n2}x_2^{k+1}  - &\ldots - a_{nn-1}x_{n-1}^{k+1} + b_n)/a_{nn} \\
 \end{aligned}
 $$
-The altered method will allow for a faster convergence of the solution than what is achieved by the Jacobi method.
+The altered method will allow for a faster convergence to the solution than what is achieved by the Jacobi method.
 
 
 
 \bigbreak
 ## Methods of Lines
 
-|     Methods of lines like leap frog and cd
+|     The goal of Methods of Lines is to discretize more than one dimension of a given partial differential equation. Once we have reduced our equations down to a continuous, single dimension, we can go about solving them as we have mentioned previously. In this instance, we discretize our spacial domain, and leave our time domain continuous. For each method, there will be an ordered pair followed behind the name of the method. We read this, $(m,n)$, as $m$th order in time, $n$th order in space. This is similar to our local/global errors we discussed in previous sections, but this time it applies to space and time, since these methods address partial differential equations. For our discussion of stability for each of the following methods, let $\lambda_1 = \frac{c\Delta t}{\Delta x}$ and $\lambda_2 = \frac{c\Delta t}{(\Delta x)^2}$. Our stability criterion is such that the method is stable if $|g| < 1$ and unstable if $|g| > 1$. 
 
 \bigbreak
 \center
@@ -433,28 +433,113 @@ The altered method will allow for a faster convergence of the solution than what
 \raggedright
 \bigbreak
 
-|     Text 
+|     The Finite Difference method is defined as follows
+
+\begin{align}
+u_{n}^{m+1} = u_{n}^{m} + \frac{c\Delta t}{2\Delta x}\left(u_{n+1}^{m}-u_{n-1}^{m} \right).
+\end{align}
+
+With our definition, we can address method stability for the Finite Difference method. We will start with stability for solving partial differential equations of the form $\frac{du}{dt} = c\frac{du}{dx}$. Let $u_n^m = g^me^{ik_nx}$ where $k_n = \frac{n\pi}{L}$. Plugging $g^me^{ik_nx}$ in for all $u_n^m$ values, we get 
+
+$$
+g^{m+1}e^{ik_nx} = g^me^{ik_nx} + \frac{\lambda_1}{2}\left(g^me^{ik_{n+1}x} - g^me^{ik_{n-1}x}\right).
+$$
+Multiplying both side of the equation by $g^{-m}e^{-ik_nx}$, we arrive at
+
+$$
+\begin{aligned}
+g &= 1 + \frac{\lambda_1}{2}\left(e^{i\Delta x} - e^{-i\Delta x}\right) \\
+&= 1 + \lambda_1i\sin(\Delta x).
+\end{aligned}
+$$
+
+We then have 
+$$
+|g|^2 = gg^* = 1 + \lambda_1^2\sin^2(\Delta x)
+$$
+which results in $|g| > 1$, making this method unstable. 
+
+|     For solutions of partial differential equations of the form $\frac{du}{dt} = c\frac{d^2u}{dx^2}$, we can go through the same process as we did previously, arriving at stability, as long as $\lambda_2 < \frac12$.
+
 
 \bigbreak
 \center
-### Leap Frog (2,2)
+### Backwards Difference (1,2)
 \raggedright
 \bigbreak
 
-|     Text 
+|     The Backwards Difference method is defined as follows
+
+\begin{align}
+u_{n}^{m} = u_{n}^{m+1} - \frac{c\Delta t}{2\Delta x}\left(u_{n+1}^{m+1}-u_{n-1}^{m+1} \right).
+\end{align}
+
+For our discussion of stability for Backwards Difference, let $u_n^m = g^me^{ik_nx}$ where $k_n = \frac{n\pi}{L}$. Plugging $g^me^{ik_nx}$ in for all $u_n^m$ values, we get 
+
+$$
+g^me^{ik_nx} = g^{m+1}e^{ik_nx} - \frac{\lambda_1}{2}g^{m+1}\left(e^{ik_{n+1}x}  - e^{ik_{n-1}x}\right).
+$$
+Multiplying both side of the equation by $g^{-m}e^{-ik_nx}$, we arrive at
+
+$$
+\begin{aligned}
+1 &= g\left(1 - \lambda_1i\sin(\Delta x)\right) \\
+g &= \left(1 - \lambda_1i\sin(\Delta x)\right)^{-1}.
+\end{aligned}
+$$
+
+We then have 
+$$
+|g|^2 = gg^* = \left(1 + \lambda_1^2\sin^2(\Delta x)\right)^{-1} < 1
+$$
+which results in $|g| < 1$, making this method stable.
+
+|     In terms of solving partial differential equations of the form $\frac{du}{dt} = c\frac{d^2u}{dx^2}$, one perk to the Backwards Difference method is that it is unconditionally stable, similar to the Backwards Euler method. However, as it is similar to the Backwards Euler method in stability, it is also an implicit methods. An explicit scheme will need to be used to determine initial conditions.
 
 \bigbreak
 \center
-### Leap Frog (2,4)
+### Leap Frog (2,2) & Leap Frog (2,4)
 \raggedright
 \bigbreak
 
-|     Text 
+|     The Leap Frog (2,2) method is defined as follows
+
+\begin{align}
+u_{n}^{m+1} = u_{n}^{m-1} - \frac{c\Delta t}{\Delta x}\left(u_{n+1}^{m}-u_{n-1}^{m} \right).
+\end{align}
+
+|     The Leap Frog (2,4) method is defined as follows
+
+\begin{align}
+u_{n}^{m+1} = u_{n}^{m-1} - \frac{c\Delta t}{6\Delta x}\left(-u_{n+2}^{m} + 8u_{n+1}^{m} - 8u_{n-1}^{m} + u_{n+2}^{m}\right).
+\end{align}
+
+With our definition, we can address method stability for the Leap Frog (2,2) method. We will start with stability for solving partial differential equations of the form $\frac{du}{dt} = c\frac{du}{dx}$. Let $u_n^m = g^me^{ik_nx}$ where $k_n = \frac{n\pi}{L}$. Plugging $g^me^{ik_nx}$ in for all $u_n^m$ values, we get 
+
+$$
+g^{m+1}e^{ik_nx} = g^{m-1}e^{ik_nx} + \lambda_1g^m\left(e^{ik_{n+1}x} - e^{ik_{n-1}x}\right).
+$$
+Multiplying both side of the equation by $g^{-m}e^{-ik_nx}$, we arrive at
+
+$$
+\begin{aligned}
+g^2 &= 1 + i2\lambda_1g\sin(k_n\Delta x).
+\end{aligned}
+$$
+
+We then have 
+$$
+g_{1,2}= i\lambda_1\sin(k_n\Delta x) \pm \sqrt {1-\lambda_1^2\sin^2(k_n\Delta x)}
+$$
+which results in $|g| < 1$ for $\lambda_1 < 1$, making this method stable. 
+
+|     For solutions of partial differential equations of the form $\frac{du}{dt} = c\frac{d^2u}{dx^2}$, we can go through the same process as we did previously, arriving at unconditional instability, regardless of our value of $\lambda_2$.
+
 
 \bigbreak
 ## Spectral Methods
 
-|     Methods of lines like leap frog and cd
+|     Alternative to solving differential equations by representing functions as polynomials, spectral methods represent functions as the sums of basis functions. As a result, we are able to calculate solutions more efficiently. We will discuss two methods, Fast Fourier Transform and Chebyshev Polynomials, that we can use to accurately approximate solutions.
 
 \bigbreak
 \center
@@ -462,7 +547,41 @@ The altered method will allow for a faster convergence of the solution than what
 \raggedright
 \bigbreak
 
-|     Text
+|     The Fourier Transform is a technique that transforms a function of time to a function of frequency. We define the Fourier Transform as follows
+
+\begin{align}
+\widehat{f(x)} = \frac1{\sqrt{2\pi}}\int^{\infty}_{-\infty}e^{-ikx}f(x)dx
+\end{align}
+
+where $x \in (-\infty, \infty)$. If we take the Fourier Transform again, i.e., $\widehat{\widehat{f(x)}}$, we get
+
+\begin{align}
+\widehat{\widehat{f(x)}} = f(x) = \frac1{\sqrt{2\pi}}\int^{\infty}_{-\infty}e^{-ikx}\widehat{f(x)}dx
+\end{align}
+
+where $k \in (-\infty, \infty)$. We will also use the Fourier Series, which is easier for a computer to understand. That definition is
+
+\begin{align}
+f(x) = b_0 + \sum^N_{n=1}a_n\sin\left(\frac{n\pi x}{L}\right) + \sum^N_{n=1}b_n\cos\left(\frac{n\pi x}{L}\right).
+\end{align}
+
+One property that is important to us, which allows us to determine a solution more easily is the derivative property for the Fourier Tranform:
+
+$$
+\widehat{f'(x)} = \frac1{\sqrt{2\pi}}\int^{\infty}_{-\infty}e^{-ikx}f'(x)dx
+$$
+Solving this equation, we can use integration by parts, with $u = e^{-ikx}$, $du = -ike^{-ikx}$, $v = f(x)$, and $dv = f'(x)dx$, we get
+
+$$
+\widehat{f'(x)} = ik \ \widehat{f(x)}.
+$$
+In fact, for any $n$th derivative of $f$, we have the following generalized formula
+
+\begin{align}
+\widehat{f^{(n)}(x)} = (ik)^n\widehat{f(x)}.
+\end{align}
+
+The Fast Fourier Transform is a fast algorithm for computing the Discrete Fourier Transform, that has a worst case time computational complexity of $O(n\log n)$, as well as periodic boundaries, with $x \in [-L,L]$. We also want $N = 2^p$ where $p \in \mathbb{N}$.
 
 \bigbreak
 \center
@@ -470,7 +589,19 @@ The altered method will allow for a faster convergence of the solution than what
 \raggedright
 \bigbreak
 
-|     Text
+|     This methods is spectral, much like FFT, with worst case computational complexity of $O(n\log n)$. The equation is defined as 
+
+\begin{align}
+\sqrt{1-x^2}\frac{d}{dx}\left(\sqrt{1-x^2}\frac{dT_n(x)}{dx}\right) + n^2T_n(x) = 0
+\end{align}
+
+where $T_n(x)$ is the Chebyshev Polynomial, and $x \in [-1,1]$. Properties include haveing real valued eigenvalues and eigenfunctions, as well as using orthogonal polynomials. When determining the Chebyshev Polynomials, we can use the following equation
+
+\begin{align}
+T_{n+1}(x) = 2xT_n(x) - T_{n-1}(x).
+\end{align}
+
+With our final method reviewed, we can now observe a few applications of our methods. It is important to make note of the fact that we can use more than one method to solve a given problem. In each of the following cases, we will consider more than one method, and discuss implementation for each.
 
 
 \break
@@ -478,7 +609,7 @@ The altered method will allow for a faster convergence of the solution than what
 # Problems
 \raggedright
 
-|     With the methods established above, we can now proceed with solving the three problems mentioned at the beginning: Van der Pol Oscillator, the Quantum Harmonic Oscillator, and the Reaction-Diffusion equation.
+|     With the methods established above, we can now proceed with solving the three problems mentioned at the beginning: Van der Pol Oscillator, the Quantum Harmonic Oscillator, and the Reaction-Diffusion equations.
 
 \bigbreak
 ## Van der Pol Oscillator
@@ -528,9 +659,9 @@ def Van_der_Pol(t, y, epsilon):
   return w2, -epsilon * ((w1**2)-1) * w2 - w1
 ```
 
-With our initial conditions established and our right-hand side function setup, we can now go about solving our initial value problem using `scipy.integrate.solve_ivp`. 
+Having our initial conditions established, and our right-hand side function setup, we can now go about solving our initial value problem using the  `scipy.integrate.solve_ivp` package. 
 
-```{python, message=FALSE, warning=FALSE, fig.align='center', fig.cap = "Solution of the Van der Pol Oscillator with $t \\in [0,32]$ and $\\epsilon = 0.1$. Notice the instability for $t$ on the interval $[0,4]$.", fig.width=6, fig.height=4,fig.pos="ht"}
+```{python, message=FALSE, warning=FALSE, fig.align='center', fig.cap = "Solution of the Van der Pol Oscillator with $t \\in [0,32]$ and $\\epsilon = 0.1$. Notice the instability for $t$ on the interval $[0,4]$.", fig.width=6, fig.height=2,fig.pos="ht"}
 ### Solution of the Van der Pol Oscillator over t
 sol = solve_ivp(Van_der_Pol, [tspan[0], tspan[-1]], y0, \
                 args = [epsilon], t_eval = tspan)
@@ -549,9 +680,9 @@ plt.legend()
 plt.show()
 ```
 
-We can observe in Figure 1 that between $t = 0$ and $t = 4$, there is a bit of inconsistency in the approximation of $y''(t)$. To counteract this inconsistency, we can try decreasing our value of $\epsilon$ to $0.01$.
+We can observe in Figure 1 that, between $t = 0$ and $t = 4$, there is a bit of inconsistency in the approximation of $y''(t)$. To counteract this inconsistency, we can try decreasing our value of $\epsilon$ to $0.01$.
 
-```{python, message=FALSE, warning=FALSE, fig.align='center', fig.cap = "Solution of the Van der Pol Oscillator with $t \\in [0,32]$ and $\\epsilon = 0.01$. We can now notice a more stable solution for $t$ on the interval $[0,4]$.", fig.width=6, fig.height=4,fig.pos="ht"}
+```{python, message=FALSE, warning=FALSE, fig.align='center', fig.cap = "Solution of the Van der Pol Oscillator with $t \\in [0,32]$ and $\\epsilon = 0.01$. We can now notice a more stable solution for $t$ on the interval $[0,4]$.", fig.width=6, fig.height=2,fig.pos="ht"}
 ### Same solution with different epsilon 
 epsilon = 0.01
 sol = solve_ivp(Van_der_Pol, [tspan[0], tspan[-1]], y0, \
@@ -570,20 +701,182 @@ plt.ylabel(r"$y(t)$", fontsize = 12)
 plt.legend()
 plt.show()
 ```
-
-It is important to note that the `solve_ivp` function uses the Runge-Kutta 4 method by default. Changing the `method` parameter will allow us to utilize different methods, some of which may be better to use, depending on the problem. 
-
-<!--Wrap up the problem-->
-
 \bigbreak
+
+
+It is important to note that the `solve_ivp` function uses the Runge-Kutta 4 method by default. Changing the `method` parameter will allow us to utilize different methods, some of which may be better to use, depending on the problem. For this problem, we were able to give examples on applications of methods for solving initial value problems. The next problem will allow us to utilize methods for solving boundary value problems and systems of equations.
+
+
+
+\break
 ## Quantum Harmonic Oscillator
 
-|     Text 
+|     We start with the probability density evolution in a one-dimensional harmonic trapping potential, which is governed by the partial differential equation
+
+\begin{align}
+i\hbar \psi_t + \frac{\hbar^2}{2m}\psi_{xx} - V(x)\psi = 0
+\end{align}
+
+where $\psi$ is the probability density and $V(x) = \frac{kx^2}{2}$ is the harmonic confining potential. Let us assume a solution to equation (23) is as follows
+
+\begin{align}
+\psi(x,t) = \sum^N_{n=1}a_n\phi_n(x) e^{\left(-i\frac{E_n}{2\hbar}t\right)},
+\end{align}
+
+which is the eigenfunction expansion solution. Plugging equation (24) into equation (23), we get
+
+\begin{align}
+\frac{d^2\phi_n}{dx^2} - \left[Kx^2-\epsilon_n\right]\phi_n = 0
+\end{align}
+
+where $\phi(x)$ goes to $0$ as $x$ goes to $\pm \infty$, and $\epsilon_n > 0$ is the quantum energy. In equation (25), it is also worth noting that $K = \frac{km}{\hbar^2}$ and $\epsilon_n = \frac{E_nm}{\hbar^2}$. With this problem established, we can now work on constructing a computational solution. We want to start with imports and initial values for the problem. 
+
+```{python, eval = FALSE}
+import numpy as np
+from scipy.integrate import solve_ivp, trapezoid
+from scipy.linalg import eig
+import matplotlib.pyplot as plt
+
+TOL = 1e-4
+L = 4
+K = 1
+A = 1
+epsilon = 0.1
+
+# Setup initial conditions
+dx = 0.1
+xspan = np.arange(-L, L + dx, dx) #-L to L with step size 0.1
+N = xspan.size
+```
+
+For this setup, we will assume that $K = 1$ and $\epsilon_n = 0.1$. We will also want to setup the right-hand side function for equation (25).
+
+```{python, eval = FALSE}
+def quantum_harmonic_rhs(x, phi, beta, eps):
+    """
+    Implementation of the right hand side of the
+    quantum harmonic oscillator function
+    """
+    y1, y2 = phi
+    dy2 = (beta - eps) * y1   # beta = K * (x**2)
+    return [y2, dy2]          # Returns y'1, y'2
+```
+
+For this first attempt at a solution, we will want to implement the shooting method to solve our equation. The following is a psuedo-implementation of that method.
+
+```{python, eval = FALSE}
+def shooting_method(epsilon):
+    """
+    Psuedo-implementation of the shooting method for 
+    iterating over eps_n
+    """
+    beta0 = epsilon
+    for mode in range(1,6):
+        beta = beta0
+        dbeta = beta0 / 100
+        for _ in range(1000):
+            solution = solve_ivp(quantum_harmonic_rhs, 
+                                 [xspan[0], xspan[-1]], 
+                                 [A, (beta - epsilon_start)*A], 
+                                 args=[beta, 
+                                       epsilon_start], 
+                                 t_eval=xspan)
+
+            right_hand_boundary = (beta - epsilon)*A
+            if np.abs(solution.y[:,-1] - right_hand_boundary < TOL:
+                print(f"Eps = {beta}")
+                norm = np.sqrt(trapezoid(np.abs(solution.y)**2,
+                                                solution.t))
+                return solution.y / norm
+
+            if (-1) ** (mode + 1) * solution.y[:,-1] > 0:
+                beta -= dbeta
+            else:
+                beta += (dbeta/2)
+                dbeta /= 2
+```
+
+Once we have established our initial condition, the right-hand side of our Quantum Harmonic Oscillator equation, and the function for the shooting method, we can now observe the solution to the problem. In this instance, we will want to normalize such that $\int^{\infty}_{\infty}|\phi_n|^2dx = 1$, which we performed in the shooting method function. We normalize in this step to ensure meaningful probability densities for our solution.
+
+```{python, eval = FALSE}
+solution = shooting_method(epsilon)
+```
+
+We can also solve the problem using the Direct method, coupled with methods for solving systems of equations.
+
+```{python, eval = FALSE}
+import numpy as np
+from scipy.integrate import solve_ivp, trapezoid
+from scipy.linalg import eig
+import matplotlib.pyplot as plt
+
+TOL = 1e-4
+L = 4
+K = 1
+A = 1
+epsilon_start = 0.1
+
+# Setup initial conditions
+dx = 0.1
+xspan = np.arange(-L, L + dx, dx) #-L to L with step size 0.1
+N = xspan.size
+
+
+# Initialize A
+A_matrix = np.zeros((N,N))
+
+def forward_difference():
+    """
+    Implementation of the forward difference scheme
+    """
+    A_matrix[0,0] = (2/3) + (dx**2)*K*(xspan[0]**2)
+    A_matrix[0,1] = -2/3
+
+
+def backward_difference():
+    """
+    Implementation of the backward difference scheme
+    """
+    A_matrix[N-1,N-2] = -2/3
+    A_matrix[N-1,N-1] = (2/3) + (dx**2)*K*(xspan[-1]**2)
+
+def central_difference():
+    """
+    Implementation of the central difference scheme
+    """
+    for i in range(1,N-1):
+        A_matrix[i,i-1] = -1
+        A_matrix[i,i+1] = -1
+        A_matrix[i,i] = 2 + (dx**2)*K*(xspan[i]**2)
+
+
+# Populate the values of A
+
+forward_difference()
+backward_difference()
+central_difference()
+
+# Solve Ax=ex
+eigen_values, eigen_vectors = eig(A_matrix)
+
+# Normalize first 5 eigenvalues and vectors
+A_vals = eigen_values[:5]
+A_vects = [np.abs(eigen_vectors[i].reshape(-1,1)) for i in range(5)]
+
+for i in range(5):
+    norm = np.sqrt(trapezoid(np.abs(A_vects[i].flatten())**2, 
+                                    xspan, 
+                                    dx))
+    A_vects[i] /= norm
+```
+
+In summary, the Quantum Harmonic Oscillator can prove to be an ideal benchmark for testing boundary value problem methods. We are able to show emphasis on the  iterative approach via the Shooting method, where we set our boundary conditions to be some value $L$, which the computer can represent. We can also encode the problem as a matrix, and perform different methods for solving systems of equations, allowing for efficient and fast execution to obtain the solution. The next problem will explore spectral methods for solving partial differential equations.
+
 
 \bigbreak
 ## Reaction-Diffusion Equations
 
-|     The Reaction-Diffusion equation helps to solve for and find phenomena when one or more substances change over space and time. Those equations are defined as follows
+|     The Reaction-Diffusion equation helps to solve for, and find, phenomena when one or more substances change over space and time. Those equations are defined as follows
 
 $$
 \begin{aligned}
@@ -601,7 +894,7 @@ $$
 \omega(A) &= -\beta A^2.
 \end{aligned}
 $$
-We will now investigate the solutions to this system formulation using two different methods, those being the spectral fast fourier transform method with periodic boundary conditions and the Chebyshev polynomial method with Dirichlet boundary conditions.
+We will now investigate the solutions to this system formulation using two different methods, those being the spectral Fast Fourier Transform method with periodic boundary conditions and the Chebyshev Polynomial method with Dirichlet boundary conditions.
 
 |     For the first solution, we will being by implementing the initial conditions for the spectral fast fourier transform. We will assume that $x,y \in [-10,10]$, $n = 64$, $\beta = 1$, $D_1 = D_2 = 0.1$, $m = 1$, and time spanning $0$ to $4$ with time steps of $0.5$.
 
@@ -654,7 +947,7 @@ KX, KY = np.meshgrid(kx, ky, indexing='xy')
 K = KX**2 + KY**2
 ```
 
-
+We want to get the real and imaginary parts of $U$ and $V$ separated appropriately, so when we put the initial conditions into our right-hand side function, we don't interfere with processing the function's input. We can now define our right-hand side function, which will take the `uv` vector in the frequency domain as an input.
 
 ```{python}
 def spectral_rhs(t, uv_vec, n, beta, D1, D2, K):
@@ -676,7 +969,8 @@ def spectral_rhs(t, uv_vec, n, beta, D1, D2, K):
     ut = (Re_ut + 1j * Im_ut).reshape((n, n), order='F')
     vt = (Re_vt + 1j * Im_vt).reshape((n, n), order='F')
 
-    # Physical fields (take real part; should remain real if symmetry holds)
+    # Physical fields (take real part; 
+    # should remain real if symmetry holds)
     u = np.real(ifft2(ut))
     v = np.real(ifft2(vt))
 
@@ -699,7 +993,7 @@ def spectral_rhs(t, uv_vec, n, beta, D1, D2, K):
     return np.concatenate([dRe_ut, dIm_ut, dRe_vt, dIm_vt])
 ```
 
-
+Now that our right-hand side has be defined, we can finish by solving our partial differential equations via the `solve_ivp` method.
 
 ```{python}
 spectral_sol = solve_ivp(
@@ -709,8 +1003,6 @@ spectral_sol = solve_ivp(
     args=[n, beta, D1, D2, K], 
     t_eval=tspan
 )
-
-
 ```
 
 
@@ -799,7 +1091,7 @@ I = np.eye(D.shape[0])
 Lap = np.kron(I, D2) + np.kron(D2, I)
 ```
 
-With all of the initial conditions and function established, we can now solve the reaction diffusion equations via Chebyshev.
+With all of the initial conditions and right-hand side function established, we can now solve the reaction diffusion equations via Chebyshev.
 
 ```{python, eval = TRUE, echo = TRUE, message=FALSE, warning=FALSE}
 cheb_sol = solve_ivp(
@@ -841,8 +1133,8 @@ imageio.mimsave("chebyshev_reaction_diffusion.gif",
 ```
 
 We can observe the spiral of $m = 1$ in the plot below (one frame from the visualization that was output):
-
-```{python, eval = TRUE, echo = FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.cap = "Solution of the Reaction-Diffusion equations with $t \\in [0,4]$ and $m = 1$. It is worth noting that we can increase $m$ and observe the changes to the visualization.", fig.width=6, fig.height=4, fig.pos="ht"}
+\center
+```{python, eval = TRUE, echo = FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.cap = "Solution of the Reaction-Diffusion equations with $t \\in [0,4]$ and $m = 1$. It is worth noting that we can increase $m$ and observe the changes to the visualization.", fig.width=4, fig.height=3, fig.pos="ht"}
 
 #Plot of the solution at t = 4
 U_final = cheb_sol.y[: (N+1)*(N+1), -1].reshape((N+1, N+1), order="F")
@@ -857,15 +1149,20 @@ plt.tight_layout()
 plt.show()
 ```
 \bigbreak
+\raggedright
 
-It is important to note that we can increase $m$ to be how ever many spirals we want in the solution. That can be a task for the reader to try and change parameters as they wish, and observe the changes in the visualization.
+It is important to note that we can increase $m$ to be however many spirals we want in the solution. That can be a task for the reader to try and change parameters as they wish, and observe the changes in the visualization. As a result of our computations in solving the Reaction-Diffusion equations, we were able to demonstrate the effectiveness of both the Fast Fourier Transform and Chebyshev Polynomials in terms of efficiency in calculating accurate approximations in both our space and time domains. Note that these are not the only ways to solve partial differential equations, and other methods can be explored in turn.
 
 
 \center
 # Conclusion
 \raggedright
 
-|     Throughout this notebook, we were able to discuss the various methods that can be employed to solve differential equations, and were able to look at three different problems that could be solved utilizing those methods. While the topics discussed just touched on the essentials needed to solve differential equations, additional resources can be found exploring the methods in more depth.
+|     Throughout this notebook, we were able to discuss the various methods that can be employed to solve differential equations in areas of initial value problems, boundary value problems, and partial differential equations. While touching on methods such as spectral methods and methods of lines to solve partial differential equations, we also addressed a few methods for solving systems of equations with higher efficiency.
+
+|     Once our discussion on methods was completed, we were able to look at three different problems that could be solved utilizing those methods. We were able to solve the Van der Pol Oscillator using a variety of the methods for solving initial value problems. When solving the Quantum Harmonic Oscillator, we utilized both the Shooting and Direct methods for solving boundary value problems. Lastly, we used both of our spectral methods to approximate solutions for the Reaction-Diffusion equations.
+
+|   While the topics discussed just touched on the essentials needed to solve differential equations, additional resources exist for readers interested in exploring these methods in greater depth. Though some of the topics are quite "new" compared to classical finite difference methods, they arise from well-established research in the field. By pursuing these resources, the reader can expect to gain invaluable insight into both the mathematical theory and practical application that can be achieved through scientific computing.
 
 
 \break
