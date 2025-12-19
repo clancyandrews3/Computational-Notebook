@@ -1,8 +1,8 @@
 ---
-title: "Computational Notebook"
+title: "Differential Equations"
+subtitle: "Computational Notebook"
 author: 
      - "Clancy Andrews"
-date: "Autumn 2025"
 header-includes:
    - \usepackage{amssymb}
    - \usepackage{amsmath}
